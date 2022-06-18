@@ -21,7 +21,9 @@ app.use(express.json())
 
 //RUTAS
 app.use('/api/auth', require('./routes/auth'))
-
+app.use('/api/project', require('./routes/project'))
+app.use('/api/blog', require('./routes/blog'))
+app.use('/api/comment', require('./routes/comment'))
 
 
 app.listen(process.env.PORT, () => {
