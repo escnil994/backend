@@ -13,10 +13,8 @@ const router = Router()
 router.get('/get-comments', getComments)
 router.get('/get-comment/:id', getComment)
 router.post('/create-new-comment/', [
-    check('name', 'El nombre es requerido').not().isEmpty(),
-    check('name', 'El nombre debe tener al menos 8 caracteres').isLength({min:8}),
-    check('email', 'El email es obligatorio').isEmpty(),
-    check('email', 'El email debe ser valido').isEmail(),
+    check('name', 'El nombre es requerido').not().isEmpty().isLength({min:8}),
+    check('email', 'El email debe ser válido').not().isEmpty().isEmail(),
     check('comment', 'Debe ingresar un comentario con al menos 12 caracteres').isLength({min:12}).not().isEmpty(),
     validateFields
 ], createComment)
