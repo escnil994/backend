@@ -18,7 +18,7 @@ dbConnection()
 
 //CORS
 
-app.use(cors());
+app.use(cors())
 
 //Body (read and parse)
 app.use(express.json())

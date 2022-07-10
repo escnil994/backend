@@ -51,11 +51,19 @@ const getComments = async (req = request, res = response) => {
             msg: 'Error al recuperar los comentarios'
         })
     } else {
-        res.status(200).json({
-            ok: true,
-            comments,
-            date: dat
-        })
+        if (comments.length == 0) {
+            res.status(200).json({
+                ok: true,
+                msg: 'No hay comentarios en este momento'
+            })
+        }
+        else {
+            res.status(200).json({
+                ok: true,
+                comments
+            })
+        }
+
 
     }
 
@@ -179,7 +187,46 @@ const autorizeComment = async (req = request, res = response) => {
 
 }
 
-const deleteComment = (req = request, res = response) => {
+const deleteComment = async (req = request, res = response) => {
+
+    const { id } = req.params
+
+
+    if (isValidObjectId(id)) {
+
+        const commentFound = await Comment.findById(id)
+
+        if (!commentFound) {
+            res.status(500).json({
+                ok: false,
+                msg: 'El comentario no existe'
+            })
+        }
+
+
+        const commentToDelete = await Comment.findByIdAndDelete(id)
+
+
+        if (commentToDelete) {
+            return res.status(200).json({
+                ok: true,
+                commentToDelete
+            })
+        }
+        else {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se pudo borrar este comentario '
+            })
+
+        }
+
+    } else {
+        res.status(400).json({
+            ok: false,
+            msg: 'El ID no es valido'
+        })
+    }
 
 }
 
