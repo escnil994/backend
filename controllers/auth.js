@@ -41,10 +41,7 @@ const newUser = async(req, res) => {
 
     return res.status(201).json({
         ok: true,
-        name: userDB.name,
-        email: userDB.email,
-        password: userDB.password,
-        token
+        msg: 'usuario creado exitosamente'
     
     })
         
@@ -61,15 +58,60 @@ const newUser = async(req, res) => {
 
 }
 
-const loginUser = (req, res) => {
+const loginUser = async (req, res) => {
+
+    const { email, password } = req.body
+    console.log(req.body)
+
+    try{
+
+        const dbUser = await User.findOne({ email });
+        console.log(dbUser)
+
+        if (!dbUser){
+            return  res.status(400).json({
+                ok: false,
+                msg: 'Este usuario no existe'
+            })
+        }
+
+
+        const validPassword = bcrypt.compareSync( password, dbUser.password )
+
+
+        if (!validPassword){
+            return  res.status(400).json({
+                ok: false,
+                msg: 'Credenciales incorrectas'
+            })
+        }
+
+
+        const token = await generateJWT(dbUser.id, dbUser.name)
+
+        return  res.status(200).json({
+            ok: true,
+            msg: 'Sesión iniciada correctamente',
+            token
+        })
+
+
+
+    }
+    catch (e) {
+        console.log(e)
+        return res.json({
+            ok: false,
+            msg: 'Error, talk to the admin'
+        })
+
+    }
+
 
    
 
 
-    return res.json({
-        ok: true,
-        msg: 'Logi user'
-    })
+
 }
 
 const revalidateToken = (req, res) => {

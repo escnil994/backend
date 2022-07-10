@@ -16,8 +16,7 @@ router.post('/new', [
 ], newUser)
 
 router.post('/login', [
-    check('email', 'El email es obligatorio').isEmpty(),
-    check('email', 'El email debe ser valido').isEmail(),
+    check('email', 'El email es obligatorio').not().isEmpty().isEmail(),
     check( 'password', 'La contraseña es requerida').isLength({min:6}),
     validateFields
 ], loginUser )
