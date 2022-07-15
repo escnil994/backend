@@ -77,15 +77,15 @@ const createPost = async (req = request, res = response) => {
 
     try {
 
-        if (req.files.image) {
+
+        if (req.files && req.files !== null) {
 
             const result = await uploadImage(req.files.image.tempFilePath)
 
-            console.log(result);
 
             data.image = {
-                public_id: result.public_id,
-                secure_url: result.secure_url
+                public_id: result.public_id || 'null',
+                secure_url: result.secure_url || 'null'
             }
 
             await fs.unlink(req.files.image.tempFilePath)
@@ -116,6 +116,7 @@ const createPost = async (req = request, res = response) => {
 
 
     } catch (error) {
+        console.log(error)
         return res.status(400).json({
             ok: false,
             msg: 'Error desconocido, habla con el administrador'
