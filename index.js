@@ -3,6 +3,8 @@ const cors = require('cors')
 const { dbConnection } = require('./database/config')
 require('dotenv').config()
 
+const fileUpload =  require('express-fileupload')
+
 
 
 //Create server - app Express
@@ -23,6 +25,13 @@ app.use(cors())
 //Body (read and parse)
 app.use(express.json())
 
+
+
+//file upload
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: './temp-upload/'
+}))
 
 
 //RUTAS

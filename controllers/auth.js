@@ -33,10 +33,6 @@ const newUser = async(req, res) => {
     const token = await generateJWT(userDB.id, name)
 
 
-
-
-
-
     await userDB.save()
 
     return res.status(201).json({
@@ -61,12 +57,10 @@ const newUser = async(req, res) => {
 const loginUser = async (req, res) => {
 
     const { email, password } = req.body
-    console.log(req.body)
 
     try{
 
         const dbUser = await User.findOne({ email });
-        console.log(dbUser)
 
         if (!dbUser){
             return  res.status(400).json({
