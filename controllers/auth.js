@@ -15,7 +15,7 @@ const newUser = async(req, res) => {
     const user = await User.findOne( { email } )
 
     if (user) {
-        return res.status(400).json({
+        return res.json({
             ok: false,
             msg: 'Email is already in use'
         })

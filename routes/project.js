@@ -3,7 +3,7 @@ const { Router } = require('express')
 const { check } = require('express-validator')
 
 
-const { getProjects, getProject, createProject, updateProject, deleteProject, uploadImage } = require('../controllers/project')
+const { getProjects, getProject, createProject, updateProject, deleteProject, uploadFiles } = require('../controllers/project')
 const { validateFields } = require('../middlewares/validate-fields')
 
 
@@ -18,6 +18,10 @@ router.post('/create-new-project/', [
     check('content', 'El contenido de este proyecto debe ser de al menos 40 caracteres').not().isEmpty().isLength({ min: 40 }),
 ], validateFields, createProject)
 router.put('/update-project/:id', updateProject)
+
+router.put('/upload-image/:id', uploadFiles)
+
+
 router.delete('/delete-project/:id', deleteProject)
 
 
