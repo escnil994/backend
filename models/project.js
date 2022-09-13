@@ -14,7 +14,7 @@ const projectSchema = Schema({
         type: String,
         required: true
     },
-    origin: {
+    github: {
         type: String,
         required: false
     },
