@@ -10,18 +10,29 @@ const { isValidObjectId } = require('mongoose');
 
 const getProjects = async (req, res = response) => {
 
+    var limit = await  req.params.limit
+
+
     try {
 
-        const getProjects = await Project.find()
+        var getProjects
+
+        if (limit === 'yes'){
+             getProjects = await Project.find().sort('date').limit(4)
+        }
+        else{
+             getProjects = await Project.find().sort('date')
+        }
+
 
         if (getProjects) {
-            return res.status(500).json({
-                ok: false,
-                projects: getProjects.length,
-                "List of projects": getProjects
+            return res.status(200).json({
+                ok: true,
+                projects: getProjects,
+                cant: getProjects.lenght
             })
         } else {
-            return res.status(500).json({
+            return res.status(400).json({
                 ok: false,
                 msg: 'No se pudieron obtener el listado de projectos'
             })
@@ -59,9 +70,10 @@ const getProject = async(req = request, res = response) => {
             }
 
         } else {
-            return res.status(500).json({
+            return res.status(400).json({
                 ok: false,
-                msg: 'Este identificador no es invalido'
+                msg: 'This project, does not exist!',
+                msg2: "You're being redirected to all projects..."
             })
         }
     } catch (error) {
@@ -149,15 +161,17 @@ const uploadFiles = async (req, res) => {
 
 
 
-                const projectToUpdate = await Project.findByIdAndUpdate({_id: id}, data)
+               const projectToUpdate = await Project.findByIdAndUpdate({_id: id}, data)
 
-                const  proyectoActualizado = await projectToUpdate
 
-                if (proyectoActualizado) {
+                if (projectToUpdate) {
+
+                    const projectUpdated = await  Project.findById(id)
+
                     return await res.status(200).json({
                         ok: true,
                         msg: 'project image has been updated',
-                        proyectoActualizado
+                        image: await projectUpdated.image
                     })
                 }
                 else {

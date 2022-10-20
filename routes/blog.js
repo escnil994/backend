@@ -10,7 +10,7 @@ const { validateFields } = require('../middlewares/validate-fields')
 const router = Router()
 
 
-router.get('/get-post', getPosts)
+router.get('/get-posts/:limit?', getPosts)
 router.get('/get-post/:id', getPost)
 router.post('/create-new-post/',[
 check('title', 'EL titulo debe tener al menos 10 caracteres').not().isEmpty().isLength({min: 10}),

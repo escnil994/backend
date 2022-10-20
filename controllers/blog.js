@@ -3,15 +3,31 @@ const fs = require('fs-extra')
 const { isValidObjectId } = require('mongoose')
 const Post = require('../models/Blog')
 const { uploadImage } = require('../utils/cloudinary')
+const Project = require("../models/project");
 
 
 
 
 const getPosts = async (req, res) => {
 
+    var limit = await  req.params.limit
+
+
     try {
 
-        const posts = await Post.find()
+
+        var posts
+
+        if (limit === 'yes'){
+            posts = await Post.find().sort('date').limit(4)
+
+        }
+        else{
+            posts = await Post.find().sort('date')
+
+        }
+
+
 
         if (posts) {
             return res.status(200).json({

@@ -1,13 +1,16 @@
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const bcrypt = require('bcryptjs');
+
+
 const { generateJWT } = require("../utils/jwt");
+const {isValidObjectId} = require("mongoose");
 
 
 
 const newUser = async(req, res) => {
 
-    const { name, email, password } = req.body
+    const { name, email, password, role } = req.body
 
 
     try {
@@ -15,7 +18,7 @@ const newUser = async(req, res) => {
     const user = await User.findOne( { email } )
 
     if (user) {
-        return res.json({
+        return res.status(500).json({
             ok: false,
             msg: 'Email is already in use'
         })
@@ -37,7 +40,8 @@ const newUser = async(req, res) => {
 
     return res.status(201).json({
         ok: true,
-        msg: 'usuario creado exitosamente'
+        msg: 'usuario creado exitosamente',
+        user: userDB
     
     })
         
@@ -86,7 +90,8 @@ const loginUser = async (req, res) => {
         return  res.status(200).json({
             ok: true,
             msg: 'Sesión iniciada correctamente',
-            token
+            token,
+            name: dbUser.name
         })
 
 
@@ -108,16 +113,61 @@ const loginUser = async (req, res) => {
 
 }
 
-const revalidateToken = (req, res) => {
-    return res.json({
+const revalidateToken = async (req, res) => {
+
+    const uid = req.id
+
+    const token = await generateJWT(uid)
+
+    const user = await User.findById(uid)
+
+    if (!user){
+        return res.status(404).json({
+            ok: false,
+            msg: 'User not found'
+        })
+    }
+
+    return res.status(200).json({
         ok: true,
-        msg: 'revalidate token'
+        msg: 'revalidate token is ok ',
+        token,
+        user
     })
+}
+
+
+const getUser = async (req, res) => {
+    const { id } = req.params
+
+    if (isValidObjectId(id)){
+        const user = await User.findById(id)
+
+
+        if (user){
+            return res.status(200).json({
+                ok: true,
+                name: user.name
+            })
+        }else{
+            return  res.status(404).json({
+                ok: false,
+                msg: 'User not found!'
+            })
+        }
+
+    }else{
+        return res.status(500).json({
+            ok: false,
+            msg: 'ID no valido'
+        })
+    }
 }
 
 
 module.exports = {
     newUser,
     loginUser,
-    revalidateToken
+    revalidateToken,
+    getUser
 }
