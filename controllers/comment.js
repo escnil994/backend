@@ -43,29 +43,49 @@ const getComment = async (req = request, res = response) => {
 
 const getComments = async (req = request, res = response) => {
 
-    const comments = await Comment.find();
+    var limit = await req.params.limit
 
-    if (!comments) {
-        return res.status(400).json({
+
+    try {
+
+        let comments
+        if (limit === 'yes'){
+            comments = await Comment.find({}).sort('-date').limit(2)
+        }else{
+            comments = await Comment.find({}).sort('-date');
+        }
+
+        if (!comments) {
+            return res.status(400).json({
+                ok: false,
+                msg: 'Error al recuperar los comentarios'
+            })
+        } else {
+            if (comments.length == 0) {
+                return res.status(200).json({
+                    ok: true,
+                    msg: 'No hay comentarios en este momento'
+                })
+            }
+            else {
+                return res.status(200).json({
+                    ok: true,
+                    comments
+                })
+            }
+
+
+        }
+
+    }catch (e) {
+        return res.status(500).json({
             ok: false,
-            msg: 'Error al recuperar los comentarios'
+            msg: "Unknown Error, talk to the admin"
         })
-    } else {
-        if (comments.length == 0) {
-            res.status(200).json({
-                ok: true,
-                msg: 'No hay comentarios en este momento'
-            })
-        }
-        else {
-            res.status(200).json({
-                ok: true,
-                comments
-            })
-        }
-
 
     }
+
+
 
 
 }
@@ -74,58 +94,59 @@ const createComment = async (req = request, res = response) => {
 
     const { name, email, comment } = req.body
 
-    if (name && email && comment) {
+    try {
+
+        if (name && email && comment) {
 
 
-        const existComment = await Comment.findOne({ email })
+            const existComment = await Comment.findOne({email})
 
 
-        if (existComment) {
+            if (existComment) {
 
-            const calcDay = 1000 * 60 * 60 * 24;
+                const calcDay = 1000 * 60 * 60 * 24;
 
-            const nowToday = new Date()
+                const nowToday = new Date()
 
-            const commentDate = existComment.date
+                const commentDate = existComment.date
 
-            const time = ((nowToday - commentDate) / calcDay).toPrecision(4)
+                const time = ((nowToday - commentDate) / calcDay).toPrecision(4)
 
-            if (time < 1) {
-                return res.status(500).json({
+                if (time < 1) {
+                    return res.status(500).json({
+                        ok: false,
+                        msg: 'Lo siento, pero solo puedes comentar una vez cada 24 horas'
+                    })
+                }
+
+
+            }
+
+
+            const newComment = new Comment(req.body)
+
+            const commentSaved = await newComment.save()
+
+
+            if (!commentSaved) {
+                return res.status(404).json({
                     ok: false,
-                    msg: 'Lo siento, pero solo puedes comentar una vez cada 24 horas'
-                })
+                    msg: 'El comentario no ha podido guardarse'
+                });
+            } else {
+                send(commentSaved.email, 'Gracias por tu commentario!!!', contentHTML(commentSaved))
+                send('escnil994@nilson-escobar.com', 'ALERTA, NUEVO COMENTARIO', contenido(commentSaved))
+
+                return res.status(200).json({
+                    ok: true,
+                    comment: commentSaved
+                });
             }
 
 
         }
-
-
-
-        const newComment = new Comment(req.body)
-
-        const commentSaved = await newComment.save()
-
-
-
-        if (!commentSaved) {
-            return res.status(404).json({
-                ok: false,
-                msg: 'El comentario no ha podido guardarse'
-            });
-        }
-        else {
-            send(commentSaved.email, 'Gracias por tu commentario!!!', contentHTML(commentSaved))
-            send('escnil994@nilson-escobar.com', 'ALERTA, NUEVO COMENTARIO', contenido(commentSaved))
-
-            return res.status(200).json({
-                ok: true,
-                comment: commentSaved
-            });
-        }
-
-
-
+    }catch (e){
+        console.log(e)
     }
 }
 

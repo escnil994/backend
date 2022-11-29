@@ -13,6 +13,9 @@ function contenido(commentSaved) {
       <br>
       <strong>
           <a href="http://localhost:3100/api/comment/autorize-comment/${commentSaved._id}">Para aprovar comentario haga clic aqui</a>
+          <br>
+          <a href="http://localhost:4200/comments/autorize-comment/${commentSaved._id}">Para aprovar comentario haga clic aqui</a>
+
       </strong>
       
   </div>

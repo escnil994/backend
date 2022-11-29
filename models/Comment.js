@@ -22,7 +22,7 @@ const commentSchema = Schema({
         default: false
     },
     date:  {
-        type: Date, default: new Date()
+        type: Date, default: Date.now()
     },
     allowed: {
         type: Boolean,
