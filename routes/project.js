@@ -16,7 +16,7 @@ router.get('/get-projects/:limit?', getProjects)
 router.get('/get-project/:id', getProject)
 router.post('/create-new-project/', ValidateJwt,[
     check('title', 'El titulo debe ser de al menos 8 caracteres').not().isEmpty().isLength({ min: 8 }),
-    check('subtitle', 'El Subtitulo debe ser de al menos 12 caracteres').not().isEmpty().isLength({ min: 12 }),
+    check('type', 'El Subtitulo debe ser de al menos 12 caracteres').not().isEmpty().isLength({ min: 12 }),
     check('content', 'El contenido de este proyecto debe ser de al menos 30 caracteres').not().isEmpty().isLength({ min: 30 }),
 ], validateFields, createProject)
 router.put('/update-project/:id', updateProject)

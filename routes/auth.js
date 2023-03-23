@@ -1,4 +1,4 @@
-const { newUser, loginUser, revalidateToken, getUser} = require('../controllers/auth')
+const { newUser, loginUser, revalidateToken, getUser, getInfo} = require('../controllers/auth')
 const { validateFields } = require('../middlewares/validate-fields')
 
 
@@ -25,5 +25,7 @@ router.post('/login', [
 router.get('/renew', ValidateJwt, revalidateToken)
 
 router.get('/get-user/:id', ValidateJwt, getUser )
+
+router.get('/get-info', getInfo)
 
 module.exports = router

@@ -6,7 +6,7 @@ const projectSchema = Schema({
         type: String,
         required: true
     },
-    subtitle: {
+    type: {
         type: String,
         required: true
     },
@@ -26,7 +26,7 @@ const projectSchema = Schema({
         type: String,
         required: false
     },
-    more: {
+    comments: {
         type: String,
         required: false
     },

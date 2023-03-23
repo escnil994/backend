@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 
 const { generateJWT } = require("../utils/jwt");
 const {isValidObjectId} = require("mongoose");
+const {request} = require("express");
 
 
 
@@ -165,9 +166,39 @@ const getUser = async (req, res) => {
 }
 
 
+const getInfo = async (request, response) => {
+
+    try{
+        const info =await User.findById('641ca221790a4745274d69e0');
+
+
+        if (info){
+            return response.status(200).json({
+                ok: true,
+                user: info
+            })
+        }
+        return  response.status(500).json({
+            ok: false,
+            msg: 'There is not user'
+        })
+    }
+
+    catch(error){
+
+        return  response.status(500).json({
+            ok: false,
+            msg: 'Unknown Error, Talk to the admin '
+        })
+    }
+
+}
+
+
 module.exports = {
     newUser,
     loginUser,
     revalidateToken,
-    getUser
+    getUser,
+    getInfo
 }
