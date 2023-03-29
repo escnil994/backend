@@ -26,3 +26,7 @@ body,
 date,
 image,
 coudinary_id
+
+
+
+

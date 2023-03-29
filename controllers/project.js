@@ -129,7 +129,42 @@ const updateProject = (req = request, res = response) => {
 
 }
 
-const deleteProject = (req = request, res = response) => {
+const deleteProject =  async (req = request, res = response) => {
+
+    const { id } = req.params
+
+
+    try {
+        if (isValidObjectId(id)) {
+
+            const projectFound = await Project.findByIdAndDelete(id)
+
+            if (!projectFound) {
+                return res.status(400).json({
+                    ok: false,
+                    msg: 'Este project no existe'
+                })
+            } else {
+                return res.status(200).json({
+                    ok: true,
+                    project: projectFound
+                })
+            }
+
+        } else {
+            return res.status(400).json({
+                ok: false,
+                msg: 'This project, does not exist!',
+                msg2: "You're being redirected to all projects..."
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error, favor consultar con administrador'
+        })
+    }
+
 
 }
 
@@ -219,6 +254,29 @@ const uploadFiles = async (req, res) => {
 }
 
 
+const searchProject = (request, response) => {
+    const search = request.params.search;
+
+    Project.find({
+        "$or": [
+            { "title": { "$regex": search, "$options": "i" } },
+            { "content": { "$regex": search, "$options": "i" } }
+        ]
+    }).sort([['date', 'descending']]).exec((err, projects) => {
+        if (err) {
+            return;
+        }
+        if (!projects || projects.length <= 0) {
+            return;
+        }
+        return response.status(200).send({
+            status: "success",
+            projects
+        })
+    });
+}
+
+
 
 
 module.exports = {
@@ -227,5 +285,6 @@ module.exports = {
     createProject,
     updateProject,
     deleteProject,
-    uploadFiles
+    uploadFiles,
+    searchProject
 }

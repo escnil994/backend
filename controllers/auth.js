@@ -88,11 +88,13 @@ const loginUser = async (req, res) => {
 
         const token = await generateJWT(dbUser.id, dbUser.name)
 
+
         return  res.status(200).json({
             ok: true,
             msg: 'Sesión iniciada correctamente',
-            token,
-            name: dbUser.name
+            accessToken: token,
+            name: dbUser.name,
+            id: dbUser.id
         })
 
 
