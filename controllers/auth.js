@@ -2,11 +2,17 @@ const User = require("../models/User");
 const bcrypt = require('bcryptjs');
 
 
+<<<<<<< HEAD
 const { generateJWT, convertToken } = require("../utils/jwt");
 const { isValidObjectId } = require("mongoose");
 
 
 const { send, passwordUpdated } = require('../utils/utils')
+=======
+const { generateJWT } = require("../utils/jwt");
+const {isValidObjectId} = require("mongoose");
+const {request} = require("express");
+>>>>>>> 7df00dbaa146fc1c4a9ebfe39a7e1a5a66c756f3
 
 
 
@@ -90,12 +96,22 @@ const loginUser = async (req, res) => {
 
         const token = await generateJWT(dbUser.id, dbUser.name)
 
+<<<<<<< HEAD
         return res.status(200).json({
             ok: true,
             msg: 'Sesión iniciada correctamente',
             token,
             name: dbUser.name,
             email: dbUser.email
+=======
+
+        return  res.status(200).json({
+            ok: true,
+            msg: 'Sesión iniciada correctamente',
+            accessToken: token,
+            name: dbUser.name,
+            id: dbUser.id
+>>>>>>> 7df00dbaa146fc1c4a9ebfe39a7e1a5a66c756f3
         })
 
 
@@ -281,11 +297,45 @@ const resetPassword =  async(req, res) => {
 
 
 
+const getInfo = async (request, response) => {
+
+    try{
+        const info =await User.findById('641ca221790a4745274d69e0');
+
+
+        if (info){
+            return response.status(200).json({
+                ok: true,
+                user: info
+            })
+        }
+        return  response.status(500).json({
+            ok: false,
+            msg: 'There is not user'
+        })
+    }
+
+    catch(error){
+
+        return  response.status(500).json({
+            ok: false,
+            msg: 'Unknown Error, Talk to the admin '
+        })
+    }
+
+}
+
+
 module.exports = {
     newUser,
     loginUser,
     revalidateToken,
     getUser,
+<<<<<<< HEAD
     changePassword,
     resetPassword
 }
+=======
+    getInfo
+}
+>>>>>>> 7df00dbaa146fc1c4a9ebfe39a7e1a5a66c756f3

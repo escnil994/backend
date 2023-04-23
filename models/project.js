@@ -6,6 +6,13 @@ const projectSchema = Schema({
         type: String,
         required: true
     },
+<<<<<<< HEAD
+=======
+    type: {
+        type: String,
+        required: true
+    },
+>>>>>>> 7df00dbaa146fc1c4a9ebfe39a7e1a5a66c756f3
     content: {
         type: String,
         required: true
@@ -22,7 +29,7 @@ const projectSchema = Schema({
         type: String,
         required: false
     },
-    more: {
+    comments: {
         type: String,
         required: false
     },

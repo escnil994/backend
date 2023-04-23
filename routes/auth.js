@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const { newUser, loginUser, revalidateToken, getUser, changePassword, resetPassword} = require('../controllers/auth')
+=======
+const { newUser, loginUser, revalidateToken, getUser, getInfo} = require('../controllers/auth')
+>>>>>>> 7df00dbaa146fc1c4a9ebfe39a7e1a5a66c756f3
 const { validateFields } = require('../middlewares/validate-fields')
 
 
@@ -26,6 +30,7 @@ router.get('/renew', ValidateJwt, revalidateToken)
 
 router.get('/get-user/:id', ValidateJwt, getUser )
 
+<<<<<<< HEAD
 router.post('/change-password', ValidateJwt, [
     check( 'password', 'La contraseña es requerida').isLength({min:6}), 
     check('password1', 'La contraseña es requerida').isLength({min: 6}),
@@ -38,3 +43,8 @@ router.put('/reset-password/:id', [
 ], resetPassword )
 
 module.exports = router
+=======
+router.get('/get-info', getInfo)
+
+module.exports = router
+>>>>>>> 7df00dbaa146fc1c4a9ebfe39a7e1a5a66c756f3
