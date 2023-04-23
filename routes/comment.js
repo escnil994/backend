@@ -5,6 +5,7 @@ const { check } = require('express-validator')
 
 const { getComments, getComment, createComment, autorizeComment, deleteComment } = require('../controllers/comment')
 const { validateFields } = require('../middlewares/validate-fields')
+const { ValidateJwt } = require('../middlewares/validate-jwt')
 
 
 const router = Router()
@@ -19,7 +20,7 @@ router.post('/create-new-comment/', [
     validateFields
 ], createComment)
 router.put('/autorize-comment/:id?', autorizeComment)
-router.delete('/delete-comment/:id', deleteComment)
+router.delete('/delete-comment/:id', ValidateJwt, deleteComment)
 
 
 

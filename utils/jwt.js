@@ -1,9 +1,9 @@
 
 const jwt = require('jsonwebtoken')
 
-const generateJWT = (id, name) => {
+const generateJWT = (id, name, email) => {
 
-    const payload = { id, name }
+    const payload = { id, name, email }
 
     return new Promise((resolve, reject) => {
 
@@ -28,7 +28,13 @@ const generateJWT = (id, name) => {
 
 }
 
+const convertToken = (token) => {
+    return JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+}
+
+
 
 module.exports = {
-    generateJWT
+    generateJWT,
+    convertToken
 }

@@ -100,6 +100,26 @@ function isValidObjectId(id) {
 
 
 
+function passwordUpdated (data) {
+    return `
+  <div style="width: auto; color: black; margin: 20px; text-align: center; font-family: Arial, Helvetica, sans-serif; font-weight: bold; background-color: rgb(196, 244, 250);">
+      <h1>${data.name}</h1>
+      <h4>${data.email}</h4>
+
+      <span style="color:red;">"Password, has been Updated"</span>
+
+
+      <br>
+      <br>
+      <strong>
+          <a href="http://localhost:3100/api/auth/reset-password/${data._id}">If you did not do this, please reset your password here</a>
+          <br>
+      </strong>
+      
+  </div>
+  `;
+}
+
 
 
 
@@ -108,6 +128,7 @@ module.exports = {
     send,
     contentHTML,
     contenido, 
-    isValidObjectId
+    isValidObjectId, 
+    passwordUpdated
 
 }

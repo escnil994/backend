@@ -1,8 +1,8 @@
-const { newUser, loginUser, revalidateToken, getUser} = require('../controllers/auth')
+const { newUser, loginUser, revalidateToken, getUser, changePassword, resetPassword} = require('../controllers/auth')
 const { validateFields } = require('../middlewares/validate-fields')
 
 
-const { Router } = require('express')
+const { Router, request } = require('express')
 const { check } = require('express-validator')
 const {ValidateJwt} = require("../middlewares/validate-jwt");
 
@@ -25,5 +25,16 @@ router.post('/login', [
 router.get('/renew', ValidateJwt, revalidateToken)
 
 router.get('/get-user/:id', ValidateJwt, getUser )
+
+router.post('/change-password', ValidateJwt, [
+    check( 'password', 'La contraseña es requerida').isLength({min:6}), 
+    check('password1', 'La contraseña es requerida').isLength({min: 6}),
+    validateFields
+], changePassword )
+
+router.put('/reset-password/:id', [
+    check('password1', 'La contraseña es requerida').isLength({min: 6}),
+    validateFields
+], resetPassword )
 
 module.exports = router
